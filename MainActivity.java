@@ -12,31 +12,23 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     /**
-     * Constants for sensors
+     * Constantes sensores
      */
     private static final float SHAKE_THRESHOLD = 1.1f;
     private static final int SHAKE_WAIT_TIME_MS = 250;
     private static final float ROTATION_THRESHOLD = 2.0f;
     private static final int ROTATION_WAIT_TIME_MS = 100;
 
-    /**
-     * The sounds to play when a pattern is detected
-     */
+
     private static MediaPlayer sonidoAcel;
     private static MediaPlayer soundGyro;
 
-    /**
-     * Sensors
-     */
     private SensorManager mSensorManager;
     private Sensor sAcelerometro;
     private Sensor sGiroscopio;
     private long mShakeTime = 0;
     private long mRotationTime = 0;
 
-    /**
-     * UI
-     */
     private TextView mGyrox;
     private TextView mGyroy;
     private TextView mGyroz;
@@ -49,34 +41,34 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Get the sensors to use
+        //
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        sAcelerometro = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        //sGiroscopio = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        //sAcelerometro = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sGiroscopio = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
-        // Instanciate the sound to use
-        sonidoAcel = MediaPlayer.create(this, R.raw.auxilio);
-        //soundGyro = MediaPlayer.create(this, R.raw.auxilio);
+        //
+        //sonidoAcel = MediaPlayer.create(this, R.raw.auxilio);
+        soundGyro = MediaPlayer.create(this, R.raw.auxilio);
 
-        // mGyrox = (TextView) findViewById(R.id.gyro_x);
-        // mGyroy = (TextView) findViewById(R.id.gyro_y);
-        // mGyroz = (TextView) findViewById(R.id.gyro_z);
+         mGyrox = (TextView) findViewById(R.id.gyro_x);
+         mGyroy = (TextView) findViewById(R.id.gyro_y);
+         mGyroz = (TextView) findViewById(R.id.gyro_z);
 
-        mAccx = (TextView) findViewById(R.id.accele_x);
-        mAccy = (TextView) findViewById(R.id.accele_y);
-        mAccz = (TextView) findViewById(R.id.accele_z);
+        //mAccx = (TextView) findViewById(R.id.accele_x);
+        //mAccy = (TextView) findViewById(R.id.accele_y);
+        //mAccz = (TextView) findViewById(R.id.accele_z);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mSensorManager.registerListener(this, sAcelerometro, SensorManager.SENSOR_DELAY_NORMAL);
-      // mSensorManager.registerListener(this, sGiroscopio, SensorManager.SENSOR_DELAY_NORMAL);
+        //mSensorManager.registerListener(this, sAcelerometro, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, sGiroscopio, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onPause() {
+        super.onPause();
         mSensorManager.unregisterListener(this);
     }
 
@@ -89,7 +81,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 mAccx.setText(R.string.act_main_no_acuracy);
                 mAccy.setText(R.string.act_main_no_acuracy);
                 mAccz.setText(R.string.act_main_no_acuracy);
-            } else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+            } else
+            if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
                 mGyrox.setText(R.string.act_main_no_acuracy);
                 mGyroy.setText(R.string.act_main_no_acuracy);
                 mGyroz.setText(R.string.act_main_no_acuracy);
@@ -103,7 +96,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             mAccz.setText("z = " + Float.toString(event.values[2]));
             eventoAcelerometro(event);
         }
-        else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+        else
+        if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
             mGyrox.setText("x = " + Float.toString(event.values[0]));
             mGyroy.setText("y = " + Float.toString(event.values[1]));
             mGyroz.setText("z = " + Float.toString(event.values[2]));
